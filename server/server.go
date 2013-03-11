@@ -619,11 +619,12 @@ func (srv *Server) CmdCommit(stdin io.ReadCloser, stdout io.Writer, args ...stri
 			return err
 		}
 		// Create a new image from the container's base layers + a new layer from container changes
-		parentImg, err := srv.images.Get(container.Image)
+		parentImg, err := srv.images.Get(container.Mountpoint.Image)
 		if err != nil {
 			return err
+		} else if parentImg == nil {
+			return fmt.Errorf("No such image: %s", container.Mountpoint.Image)
 		}
-
 		img, err := srv.images.Create(rwTar, parentImg, imgName, "")
 		if err != nil {
 			return err

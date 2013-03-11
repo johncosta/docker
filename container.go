@@ -34,7 +34,6 @@ type Container struct {
 	Config     *Config
 	Mountpoint *fs.Mountpoint
 	State      *State
-	Image      string
 
 	network         *NetworkInterface
 	networkManager  *NetworkManager
@@ -80,7 +79,6 @@ func createContainer(id string, root string, command string, args []string, imag
 		Path:            command,
 		Args:            args,
 		Config:          config,
-		Image:           image.Id,
 		Mountpoint:      mountpoint,
 		State:           newState(),
 		networkManager:  netManager,

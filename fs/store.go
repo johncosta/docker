@@ -117,6 +117,9 @@ func (store *Store) Create(layerData Archive, parent *Image, pth, comment string
 		Comment: comment,
 		store:   store,
 	}
+	if parent != nil {
+		img.Parent = parent.Id
+	}
 	// FIXME: we shouldn't have to pass os.Stderr to AddLayer()...
 	// FIXME: Archive should contain compression info. For now we only support uncompressed.
 	_, err := store.layers.AddLayer(img.Id, layerData)
@@ -343,6 +346,7 @@ func (mp *Mountpoint) Deregister() error {
 	return err
 }
 
+// FetchMountpoint looks for a mountpoint registered at `root`, with a rw layer of `rw`.
 func (store *Store) FetchMountpoint(root, rw string) (*Mountpoint, error) {
 	res, err := store.orm.Select(Mountpoint{}, "select * from mountpoints where Root=? and Rw=?", root, rw)
 	if err != nil {
